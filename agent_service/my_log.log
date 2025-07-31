@@ -1,0 +1,2 @@
+2025-06-09 15:09:18,544 - httpx - INFO - HTTP Request: POST http://localhost:11434/api/chat "HTTP/1.1 200 OK"
+2025-06-09 15:09:18,825 - httpx - INFO - HTTP Request: POST http://localhost:11434/api/chat "HTTP/1.1 200 OK"

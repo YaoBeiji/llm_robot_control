@@ -1,0 +1,45 @@
+llm_provider: vllm   # 可选值：ollama 或 vllm
+
+ollama:
+  model: qwen3:32b
+  base_url: http://localhost:11434
+  temperature: 0.7
+
+# vllm:
+#   model: "Qwen3-8B"
+#   openai_api_base: "http://localhost:8101/v1"
+#   openai_api_key: "EMPTY"
+#   temperature: 0.7
+
+#支持Qwen3-8B 和14B 
+# vllm:
+#   model: "Qwen3-14B"
+#   openai_api_base: "http://localhost:8103/v1"
+#   openai_api_key: "EMPTY"
+#   temperature: 0.7
+vllm:
+  model: "Qwen3-8b"
+  openai_api_base: "http://172.16.20.8:8100/v1"
+  openai_api_key: "EMPTY"
+  temperature: 0.7
+# vllm:
+#   model: "Qwen3-32B"
+#   openai_api_base: "http://localhost:8106/v1"
+#   openai_api_key: "EMPTY"
+#   temperature: 0.7
+
+# model: qwen3-30b-A3b
+# 8105
+# vllm:
+#   model: "qwen3-30b-A3b"
+#   openai_api_base: "http://localhost:8105/v1"
+#   openai_api_key: "EMPTY"
+#   temperature: 0.7
+
+#暂时不能使用Deepseek-R1
+#使用Deepseek-R1的话需要调用config.py中的get_llm()加入工具参数并设置tool_choice="required"。可以工具调用，但会无限调用如果设置tool_choice="auto"会调用工具失败
+#vllm:
+#   model: "DeepSeek-R1-0528-Qwen3-8B"
+#   openai_api_base: "http://localhost:8100/v1"
+#   openai_api_key: "EMPTY"
+#   temperature: 0.7

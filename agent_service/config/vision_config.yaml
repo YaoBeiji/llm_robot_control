@@ -1,0 +1,14 @@
+ollama:
+  model: qwen3:32b
+  base_url: http://localhost:11434
+  temperature: 0.7
+
+model:
+  - name: yolov8s-worldv2
+    path: ../agent_service/tools/weights/yolov8s-worldv2.pt
+  - name: SenseVoiceSmall
+    path: ../agent_service/tools/SenseVoiceSmall
+  - name: ct-transformer-large
+    path: ../agent_service/tools/weights/ct-transformer-large
+
+  

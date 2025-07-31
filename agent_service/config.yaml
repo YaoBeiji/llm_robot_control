@@ -1,0 +1,67 @@
+llm_provider: vllm   # 可选值：ollama 或 vllm
+
+ollama:
+  model: qwen3:32b
+  base_url: http://localhost:11434
+  temperature: 0.7
+
+vllm:
+  model: "DeepSeek-R1-Distill-Qwen-1.5B"
+  openai_api_base: "http://localhost:8102/v1"
+  openai_api_key: "EMPTY"
+  temperature: 0.7
+
+master_agent:
+  name: MasterAgent
+  description: "机器人控制系统，负责将指令拆解给机械臂控制系统和底盘控制系统。"
+  tools: ["arm_ctrl", "chassis_ctrl"]
+  react_prompt: "你必须按照如下思路解决这个问题：\n{demo}"
+  plan_prompt: |
+    指令：把桌上的可乐拿起来
+    动作：1.arm_control机械臂归零 2.chassis_control运动到书桌 3.arm_control把可口可乐拿到空中
+    指令：把桌子上的可口可乐，苹果，梨子都拿到篮子里
+    动作：1.arm_control机械臂归零 2.chassis_control运动到桌子 3.arm_control把可口可乐拿到篮子 4.arm_control把苹果拿到篮子 5.arm_control把梨子拿到篮子 6.arm_control机械臂归零
+    指令：到桌子旁边去
+    动作：1.arm_control机械臂归零 2.chassis_control运动到桌子
+    指令：把桌子上的可乐拿到篮子里
+    动作：1.arm_control机械臂归零 2.chassis_control运动到桌子 3.arm_control把可乐拿到篮子里 4.arm_control机械臂归零
+    指令：把桌子A上的苹果放到桌子B上的篮子里
+    动作：1.arm_control机械臂归零 2.chassis_control运动到桌子A 3.arm_control把苹果拿到空中 4.chassis_control运动到桌子B 5.arm_control把苹果放到篮子里 6.arm_control机械臂归零
+  isLocal: True
+
+slave_agents:
+  - name: arm_ctrl
+    description: "控制机械臂进行某些动作的服务"
+    parameters: [{
+        'name': 'task',
+        'type': 'string',
+        'description': '详细描述了希望机械臂完成的任务',
+        'required': True
+    }]
+    tools: ["detect_anything","arm_point_to_point_move",'grasp', "release", "arm_reset", "arm_lift"]
+    react_prompt: "你必须按照如下思路解决这个问题：\n{demo}"
+    plan_prompt: |
+      指令：机械臂归零
+      动作：1.arm_reset机械臂归零
+      指令：把水果拿到篮子里
+      动作：1.detect_anything检测水果的位置 2.arm_point_to_point_move机械臂移动到水果 3.grasp抓取水果 4.detect_anything检测篮子的位置 5.arm_point_to_point_move机械臂移动到篮子 6.release水果
+      指令：把水果拿到空中
+      动作：1.detect_anything检测水果的位置 2.arm_point_to_point_move机械臂移动到水果 3.grasp抓取水果 4.arm_lift机械臂移动到空中
+      指令：拿起桌上的水果
+      动作：1.detect_anything检测水果的位置 2.arm_point_to_point_move机械臂移动到水果 3.grasp抓取水果 4.arm_lift机械臂移动到空中
+    isLocal: True
+
+  - name: chassis_ctrl
+    description: "控制机器人底盘进行运动的服务"
+    parameters: [{
+        'name': 'task',
+        'type': 'string',
+        'description': '详细描述了希望底盘系统完成的任务',
+        'required': True
+    }]
+    tools: ["chassis_point_to_point_move"]
+    react_prompt: "你必须按照如下思路解决这个问题：\n{demo}"
+    plan_prompt: |
+      指令：运动到餐桌
+      动作：1.chassis_point_to_point_move餐桌
+    isLocal: True
